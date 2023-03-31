@@ -61,13 +61,16 @@ const GlobalStyle = createGlobalStyle`
   *{
     box-sizing: border-box;
   }
-  body{
-
-  }
-  a{
-    text-decoration: none;
-    color:inherit;
-  }
+  body {
+   font-weight: 400;
+   font-family: 'Source Sans Pro', sans-serif;
+   color:black;
+   line-height: 1.2;
+ }
+ a {
+  text-decoration:none;
+  color:inherit;
+}
 `;
 
 root.render(
