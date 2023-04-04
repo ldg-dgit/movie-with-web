@@ -90,12 +90,38 @@ const Overlay = styled(motion.div)`
 
 const BigMovie = styled(motion.div)`
   position: fixed;
-  width: 40vw;
+  width: 50vw;
   height: 80vh;
-  top: 75;
+  top: 10%;
   left: 0;
   right: 0;
   margin: 0 auto;
+  background-color: ${(props) => props.theme.black.lighter};
+  overflow: scroll;
+  scrollbar: ;
+`;
+
+const BigCover = styled.div`
+  width: 100%;
+  height: 350px;
+  background-size: cover;
+  background-position: center center;
+`;
+
+const BigTitle = styled.h3`
+  color: ${(props) => props.theme.white.lighter};
+  padding: 20px;
+  font-size: 35px;
+  font-weight: 300;
+  position: relative;
+  top: -75px;
+`;
+
+const BigOverview = styled.p`
+  padding: 20px;
+  position: relative;
+  top: -80px;
+  color: ${(props) => props.theme.white.lighter};
 `;
 
 const rowVariants = {
@@ -118,7 +144,7 @@ const boxVariants = {
   },
   hover: {
     scale: 1.3,
-    y: 0,
+    y: -50,
     transition: {
       delay: 0.5,
       duration: 0.3,
@@ -162,6 +188,9 @@ function Home() {
   const onOverlayClick = () => {
     navigate("/");
   };
+  const clickedMovie =
+    bigMovieMatch?.params.movieId &&
+    data?.results.find((movie) => String(movie.id) === bigMovieMatch.params.movieId);
   return (
     <Wrapper>
       {isLoading ? (
@@ -211,7 +240,21 @@ function Home() {
             {bigMovieMatch ? (
               <>
                 <Overlay onClick={onOverlayClick} exit={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <BigMovie layoutId={bigMovieMatch.params.movieId}></BigMovie>
+                  <BigMovie layoutId={bigMovieMatch.params.movieId}>
+                    {clickedMovie && (
+                      <>
+                        <BigCover
+                          style={{
+                            backgroundImage: `linear-gradient(to top, #202020, transparent), url(${makeImagePath(
+                              clickedMovie.backdrop_path
+                            )})`,
+                          }}
+                        />
+                        <BigTitle>{clickedMovie.title}</BigTitle>
+                        <BigOverview>{clickedMovie.overview}</BigOverview>
+                      </>
+                    )}
+                  </BigMovie>
                 </Overlay>
               </>
             ) : null}
