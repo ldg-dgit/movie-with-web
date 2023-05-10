@@ -16,7 +16,7 @@ const GET_MOVIE = gql`
 
 const Container = styled.div`
 	height: 100vh;
-	background-image: linear-gradient(-45deg, #d754ab, #fd723a);
+	background-image: linear-gradient(-90deg, #66cc66, #4444ff);
 	width: 100%;
 	display: flex;
 	justify-content: space-around;
@@ -55,17 +55,38 @@ const Image = styled.div`
 
 export default function Movie() {
 	const { id } = useParams();
-	const { data, loading } = useQuery(GET_MOVIE, {
+	const {
+		data,
+		loading,
+		client: { cache },
+	} = useQuery(GET_MOVIE, {
 		variables: {
 			movieId: id,
 		},
 	});
+	const onClick = () => {
+		cache.writeFragment({
+			id: `Movie:${id}`,
+			fragment: gql`
+				fragment MovieFragment on Movie {
+					isLiked
+				}
+			`,
+			data: {
+				isLiked: !data.movie.isLiked,
+			},
+		});
+	};
 	return (
 		<Container>
 			<Column>
 				<Title>{loading ? "Loading..." : `${data.movie?.title}`}</Title>
 				<Subtitle>⭐️ {data?.movie?.rating}</Subtitle>
-				<button>{data?.movie?.isLiked ? "Unlike" : "Like"}</button>
+				{loading ? null : (
+					<button onClick={onClick}>
+						{data?.movie?.isLiked ? "Unlike" : "Like"}
+					</button>
+				)}
 			</Column>
 			<Image bg={data?.movie?.medium_cover_image} />
 		</Container>
