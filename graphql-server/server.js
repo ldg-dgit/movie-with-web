@@ -33,15 +33,17 @@ const typeDefs = gql`
 
 const resolvers = {
 	Query: {
-		allMovies() {
-			return fetch("https://yts.mx/api/v2/list_movies.json")
-				.then((r) => r.json())
-				.then((json) => json.data.movies);
+		async allMovies() {
+			const r = await fetch("https://yts.mx/api/v2/list_movies.json");
+			const json = await r.json();
+			return json.data.movies;
 		},
-		movie(_, { id }) {
-			return fetch(`https://yts.mx/api/v2/movie_details.json?movie_id=${id}`)
-				.then((r) => r.json())
-				.then((json) => json.data.movie);
+		async movie(_, { id }) {
+			const r = await fetch(
+				`https://yts.mx/api/v2/movie_details.json?movie_id=${id}`
+			);
+			const json = await r.json();
+			return json.data.movie;
 		},
 	},
 };
